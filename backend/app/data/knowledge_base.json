@@ -1,0 +1,93 @@
+[
+  {
+    "crop_name": "Paddy (Rice)",
+    "topic": "Blast (Pyricularia oryzae)",
+    "category": "disease",
+    "symptoms": "Spindle-shaped or eye-shaped lesions with brown or reddish-brown borders and greyish-white centers on leaves. In severe cases, lesions coalesce and dry up entire leaves. Can also affect node (node blast) and neck of panicle (neck blast causing grain chaffiness).",
+    "favorable_conditions": "High relative humidity (>90%), dew, cloudy weather, temperatures between 20-26°C, and excessive application of nitrogenous fertilizers.",
+    "cultural_control": "Avoid excessive or late application of chemical nitrogen fertilizers; apply nitrogen in 3 split doses. Maintain proper plant spacing. Destroy infected crop stubble and weeds around field bunds.",
+    "biological_control": "Seed treatment with Trichoderma viride or Pseudomonas fluorescens @ 10g/kg of seeds. Spray Pseudomonas fluorescens @ 2.5 kg/ha at tillering and boot leaf stage.",
+    "chemical_guidelines_caution": "Only when economic threshold is reached: Seed treatment with Tricyclazole 75 WP @ 2g/kg seed. Spraying of Tricyclazole 75 WP @ 0.6g/L or Isoprothiolane 40 EC @ 1.5ml/L at early infection. Always consult your local Krishi Vigyan Kendra (KVK) before chemical application.",
+    "source_institution": "ICAR - National Rice Research Institute (NRRI), Cuttack",
+    "source_url": "https://icar-nrri.gov.in/crop-protection",
+    "publication_year": "2023"
+  },
+  {
+    "crop_name": "Paddy (Rice)",
+    "topic": "Brown Spot (Bipolaris oryzae / Helminthosporium oryzae)",
+    "category": "disease",
+    "symptoms": "Isolated small, circular to oval dark brown or purplish brown spots on leaves, glumes, and coleoptiles. Spots develop yellow halos around them as they mature. Common in nutrient-deficient (potassium, nitrogen) or water-stressed soils.",
+    "favorable_conditions": "High relative humidity (86-100%), temperature between 25-30°C, nutrient-starved or saline soils.",
+    "cultural_control": "Soil application of balanced fertilizers based on soil test (ensure adequate Potash K2O). Good water drainage and avoiding prolonged drought stress in paddy plots.",
+    "biological_control": "Seed treatment with Pseudomonas fluorescens @ 10g/kg seed. Foliar application of neem seed kernel extract (NSKE 5%).",
+    "chemical_guidelines_caution": "If severe: Mancozeb 75 WP @ 2g/L or Propiconazole 25 EC @ 1ml/L at tillering stage. Apply wearing protective gear. Consult local agricultural extension officer.",
+    "source_institution": "ICAR - Indian Institute of Rice Research (IIRR), Hyderabad",
+    "source_url": "https://www.icar-iirr.org",
+    "publication_year": "2023"
+  },
+  {
+    "crop_name": "Paddy (Rice)",
+    "topic": "Bacterial Leaf Blight (Xanthomonas oryzae pv. oryzae)",
+    "category": "disease",
+    "symptoms": "Water-soaked lesions starting from the leaf margins and tips, rapidly enlarging and turning pale green then straw yellow with wavy margins. Milky bacterial ooze droplets visible on infected leaves in early morning dew.",
+    "favorable_conditions": "Warm temperatures (25-34°C), high humidity (>70%), heavy rain accompanied by strong winds.",
+    "cultural_control": "Clip infected leaf tips during transplanting. Avoid field-to-field flooding of water from infected plots. Reduce nitrogen dosage; increase muriate of potash.",
+    "biological_control": "Foliar spray of fresh cow dung slurry supernatant (20g/L water) or Pseudomonas fluorescens.",
+    "chemical_guidelines_caution": "Bactericides have limited efficacy; Copper oxychloride 50 WP @ 2.5g/L + Streptocycline @ 0.1g/L may be recommended in consultation with state university advisory.",
+    "source_institution": "Tamil Nadu Agricultural University (TNAU) Agritech Portal",
+    "source_url": "https://agritech.tnau.ac.in/crop_protection/crop_prot_crop%20diseases_cereals_paddy.html",
+    "publication_year": "2024"
+  },
+  {
+    "crop_name": "Wheat",
+    "topic": "Yellow / Stripe Rust (Puccinia striiformis)",
+    "category": "disease",
+    "symptoms": "Linear yellow stripes or pustules arranged in parallel lines along the veins of wheat leaves. Yellow powdery spores easily rub off onto fingers or clothing.",
+    "favorable_conditions": "Cool and humid weather (temperatures between 10-15°C with high morning humidity/fog).",
+    "cultural_control": "Cultivate rust-resistant varieties recommended by ICAR-IIWBR (e.g., HD-3086, DBW-187, DBW-222). Destroy self-sown wild wheat and weed grasses.",
+    "biological_control": "Early preventive bio-control using Trichoderma harzianum soil and seed treatment.",
+    "chemical_guidelines_caution": "On initial focal infection sighting: Spray Propiconazole 25 EC @ 1 ml/L or Tebuconazole 25.9 EC @ 1 ml/L. Ensure complete leaf coverage. Contact nearest KVK expert.",
+    "source_institution": "ICAR - Indian Institute of Wheat and Barley Research (IIWBR), Karnal",
+    "source_url": "https://iiwbr.icar.gov.in",
+    "publication_year": "2024"
+  },
+  {
+    "crop_name": "Cotton",
+    "topic": "Pink Bollworm (Pectinophora gossypiella)",
+    "category": "pest",
+    "symptoms": "Rosetted flowers that fail to open properly. Boreholes on developing bolls sealed with excreta. Damaged bolls drop prematurely or open prematurely with stained lint and damaged seeds.",
+    "favorable_conditions": "Warm and moderately humid conditions during flowering and boll development phase.",
+    "cultural_control": "Install pheromone traps @ 5 traps/acre for monitoring and @ 10-12 traps/acre for mass trapping. Destroy crop stalks promptly after final picking (terminate crop by December).",
+    "biological_control": "Release of Trichogramma bactrae egg parasitoid @ 60,000/acre at weekly intervals. Spray Beauveria bassiana @ 5g/L.",
+    "chemical_guidelines_caution": "When trap catch exceeds 8 moths/trap/night for 3 consecutive days: Consult official state package of practices for recommended registered sprays.",
+    "source_institution": "ICAR - Central Institute for Cotton Research (CICR), Nagpur",
+    "source_url": "https://cicr.icar.gov.in",
+    "publication_year": "2023"
+  },
+  {
+    "crop_name": "Mustard",
+    "topic": "Alternaria Blight (Alternaria brassicae)",
+    "category": "disease",
+    "symptoms": "Concentric dark brown to black circular spots with target-board appearance on leaves, stems, and pods. Infected pods produce shrivelled, discolored seeds.",
+    "favorable_conditions": "Cloudy, humid weather with occasional showers and temperature around 15-25°C.",
+    "cultural_control": "Timely sowing in October before mid-November to escape peak disease period. Collect and burn infected plant debris. Maintain adequate plant spacing.",
+    "biological_control": "Seed treatment with Trichoderma viride @ 5g/kg seed. Foliar spray of garlic bulb extract (2%).",
+    "chemical_guidelines_caution": "Mancozeb 75 WP @ 2g/L or Iprodione 50 WP @ 2g/L at 45 and 60 days after sowing. Consult local agricultural development office.",
+    "source_institution": "ICAR - Directorate of Rapeseed-Mustard Research (DRMR), Bharatpur",
+    "source_url": "https://www.drmr.res.in",
+    "publication_year": "2023"
+  },
+  {
+    "crop_name": "Tomato",
+    "topic": "Early Blight (Alternaria solani)",
+    "category": "disease",
+    "symptoms": "Concentric rings (target board pattern) of brown-black lesions on older lower leaves first. Stem lesions are dark and slightly sunken. Foliage yellows and dies.",
+    "favorable_conditions": "Alternating periods of rain/high humidity followed by dry, warm weather (24-29°C).",
+    "cultural_control": "Crop rotation with non-solanaceous crops. Stake plants to keep lower foliage off soil. Drip irrigation to keep leaves dry.",
+    "biological_control": "Trichoderma harzianum @ 10g/L spray.",
+    "chemical_guidelines_caution": "Copper hydroxide 53.8 DF @ 2g/L or Chlorothalonil 75 WP @ 2g/L. Observe statutory waiting period before harvest.",
+    "source_institution": "ICAR - Indian Institute of Horticultural Research (IIHR), Bengaluru",
+    "source_url": "https://www.iihr.res.in",
+    "publication_year": "2024"
+  }
+]
