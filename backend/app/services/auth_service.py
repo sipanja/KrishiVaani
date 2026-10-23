@@ -2,7 +2,7 @@ import jwt
 from functools import wraps
 from datetime import datetime, timezone, timedelta
 from flask import request, jsonify, current_app
-from ..models import User
+from ..models import db, User
 
 def generate_token(user: User) -> str:
     payload = {
