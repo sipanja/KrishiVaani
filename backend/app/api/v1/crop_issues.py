@@ -62,11 +62,14 @@ def report_issue():
         if saved['success']:
             image_path = saved['filename']
 
+    language = data.get('language') or (user.profile.preferred_language if user.profile else 'hi')
+
     # Analyze with verified RAG advisory service
     analysis = advisory_service.analyze_crop_problem(
         crop=crop,
         symptoms=symptoms,
-        farmer_profile=user.profile
+        farmer_profile=user.profile,
+        language=language
     )
 
     issue = CropIssue(

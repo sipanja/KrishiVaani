@@ -87,7 +87,8 @@ def send_message(conv_id: int):
     result = advisory_service.answer_query(
         user_query=user_content,
         farmer_profile=user.profile,
-        active_crop=active_crop
+        active_crop=active_crop,
+        language=language
     )
 
     # Assistant's verified answer

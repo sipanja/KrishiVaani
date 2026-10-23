@@ -18,6 +18,98 @@ import {
   Sprout
 } from 'lucide-react';
 
+const ASSISTANT_STRINGS: Record<string, {
+  welcome_title: string;
+  welcome_desc: string;
+  starter_1: string;
+  starter_2: string;
+  starter_3: string;
+  placeholder: string;
+  analyzing: string;
+}> = {
+  bn: {
+    welcome_title: "কৃষিবাণী AI সহকারীতে স্বাগতম",
+    welcome_desc: "আপনার ফসলের যেকোনো সমস্যা বাংলায় লিখে বা মুখে বলে জিজ্ঞাসা করুন। আইসিএআর (ICAR) অনুমোদিত তথ্যে উত্তর পাবেন।",
+    starter_1: "ধানের ব্লাস্ট রোগের লক্ষণ ও জৈব প্রতিকার কী?",
+    starter_2: "গমের হলুদ মরিচা রোগ কীভাবে দূর করব?",
+    starter_3: "আমি জানি না আমার ফসলের কী হয়েছে, সাহায্য করুন",
+    placeholder: "আপনার ফসলের সমস্যা বা প্রশ্ন লিখুন...",
+    analyzing: "কৃষিবাণী আইসিএআর রেকর্ডের ভিত্তিতে উত্তর প্রস্তুত করছে..."
+  },
+  hi: {
+    welcome_title: "कृषिवाणी AI में आपका स्वागत है",
+    welcome_desc: "अपनी फसल की कोई भी समस्या बोलकर या लिखकर पूछें। हम प्रमाणित वैज्ञानिक ICAR स्रोतों से उत्तर देंगे।",
+    starter_1: "धान में ब्लास्ट रोग का जैविक इलाज क्या है?",
+    starter_2: "गेहूं में पीला रतुआ के लक्षण और उपाय?",
+    starter_3: "मेरी फसल खराब हो रही है, क्या बीमारी है?",
+    placeholder: "अपनी फसल की समस्या पूछें...",
+    analyzing: "कृषिवाणी उत्तर तैयार कर रही है..."
+  },
+  te: {
+    welcome_title: "కృషివాణి AI కి స్వాగతం",
+    welcome_desc: "మీ పంట సమస్యలను మీ మాతృభాషలో మాట్లాడి లేదా టైప్ చేసి అడగండి.",
+    starter_1: "వరిలో అగ్గి తెగులు నివారణ చర్యలు ఏమిటి?",
+    starter_2: "పత్తిలో పురుగుల నివారణ ఎలా చేయాలి?",
+    starter_3: "నా పంటకు ఏమైందో అర్థం కావడం లేదు, సహాయం చేయండి",
+    placeholder: "మీ పంట సమస్యను అడగండి...",
+    analyzing: "కృషివాణి సమాధానం సిద్ధం చేస్తోంది..."
+  },
+  ta: {
+    welcome_title: "கிருஷிவாணி AI-க்கு நல்வரவு",
+    welcome_desc: "உங்கள் பயிர் பிரச்சனைகளை தமிழில் பேசி அல்லது எழுதி கேளுங்கள்.",
+    starter_1: "நெல்லில் குலை நோய் கட்டுப்பாடு முறைகள் என்ன?",
+    starter_2: "பருத்தியில் பூச்சி தாக்குதலை தடுப்பது எப்படி?",
+    starter_3: "என் பயிருக்கு என்ன ஆச்சுன்னு தெரியல, உதவவும்",
+    placeholder: "உங்கள் பயிர் கேள்வியை கேட்கவும்...",
+    analyzing: "கிருஷிவாணி பதில் தயாரிக்கிறது..."
+  },
+  mr: {
+    welcome_title: "कृषीवाणी AI मध्ये आपले स्वागत आहे",
+    welcome_desc: "आपल्या पिकाची कोणतीही समस्या बोलून किंवा लिहून विचारा.",
+    starter_1: "भातावरील करपा रोगाचे नियंत्रण कसे करावे?",
+    starter_2: "गव्हावरील तांबेरा रोगाची लक्षणे कोणती?",
+    starter_3: "माझ्या पिकाला काय झाले आहे, कृपया मदत करा",
+    placeholder: "आपल्या पिकाची समस्या विचारा...",
+    analyzing: "कृषीवाणी उत्तर तयार करत आहे..."
+  },
+  gu: {
+    welcome_title: "કૃષિવાણી AI માં આપનું સ્વાગત છે",
+    welcome_desc: "તમારા પાકની કોઈપણ સમસ્યા બોલીને કે લખીને પૂછો.",
+    starter_1: "ડાંગરમાં કરપો રોગનું નિયંત્રણ કેવી રીતે કરવું?",
+    starter_2: "ઘઉંમાં ગેરુ રોગના લક્ષણો શું છે?",
+    starter_3: "મને ખબર નથી કે મારા પાકને શું થયું છે, મદદ કરો",
+    placeholder: "તમારા પાકની સમસ્યા પૂછો...",
+    analyzing: "કૃષિવાણી ઉત્તર તૈયાર કરી રહી છે..."
+  },
+  pa: {
+    welcome_title: "ਕ੍ਰਿਸ਼ੀਵਾਣੀ AI ਵਿੱਚ ਜੀ ਆਇਆਂ ਨੂੰ",
+    welcome_desc: "ਆਪਣੀ ਫ਼ਸਲ ਬਾਰੇ ਕੋਈ ਵੀ ਸਵਾਲ ਬੋਲ ਕੇ ਜਾਂ ਲਿਖ ਕੇ ਪੁੱਛੋ।",
+    starter_1: "ਝੋਨੇ ਦੇ ਝੁਲਸਾ ਰੋਗ ਦਾ ਇਲਾਜ ਕੀ ਹੈ?",
+    starter_2: "ਕਣਕ ਦੀ ਪੀਲੀ ਕੁੰਗੀ ਦੇ ਲੱਛਣ ਅਤੇ ਰੋਕਥਾਮ?",
+    starter_3: "ਮੈਨੂੰ ਨਹੀਂ ਪਤਾ ਮੇਰੀ ਫ਼ਸਲ ਨੂੰ ਕੀ ਹੋਇਆ, ਮਦਦ ਕਰੋ",
+    placeholder: "ਆਪਣੀ ਫ਼ਸਲ ਬਾਰੇ ਸਵਾਲ ਪੁੱਛੋ...",
+    analyzing: "ਕ੍ਰਿਸ਼ੀਵਾਣੀ ਜਵਾਬ ਤਿਆਰ ਕਰ ਰਹੀ ਹੈ..."
+  },
+  kn: {
+    welcome_title: "ಕೃಷಿವಾಣಿ AI ಗೆ ಸುಸ್ವಾಗತ",
+    welcome_desc: "ನಿಮ್ಮ ಬೆಳೆಯ ಯಾವುದೇ ಸಮಸ್ಯೆಯನ್ನು ಮಾತನಾಡಿ ಅಥವಾ ಬರೆದು ಕೇಳಿ.",
+    starter_1: "ಭತ್ತದ ಬೆಂಕಿ ರೋಗದ ನಿಯಂತ್ರಣ ಕ್ರಮಗಳು ಯಾವುವು?",
+    starter_2: "ಗೋಧಿ ಬೆಳೆಯಲ್ಲಿ ರೋಗ ಲಕ್ಷಣಗಳನ್ನು ಗುರುತಿಸುವುದು ಹೇಗೆ?",
+    starter_3: "ನನ್ನ ಬೆಳೆಗೆ ಏನಾಗಿದೆ ಎಂದು ತಿಳಿದಿಲ್ಲ, ಸಹಾಯ ಮಾಡಿ",
+    placeholder: "ನಿಮ್ಮ ಬೆಳೆಯ ಸಮಸ್ಯೆಯನ್ನು ಕೇಳಿ...",
+    analyzing: "ಕೃಷಿವಾಣಿ ಉತ್ತರ ಸಿದ್ಧಪಡಿಸುತ್ತಿದೆ..."
+  },
+  en: {
+    welcome_title: "Welcome to KrishiVaani Assistant",
+    welcome_desc: "Ask about crop cultivation, leaf diseases, pest control, or weather precautions grounded in ICAR records.",
+    starter_1: "What is the control measure for blast in paddy?",
+    starter_2: "How to identify yellow rust in wheat?",
+    starter_3: "I don't know what happened to my crop, please help",
+    placeholder: "Ask your agricultural question...",
+    analyzing: "KrishiVaani is analyzing with ICAR records..."
+  }
+};
+
 interface AssistantPageProps {
   initialQuery?: string;
   onNavigateTab: (tab: string, extra?: any) => void;
@@ -25,6 +117,7 @@ interface AssistantPageProps {
 
 export const AssistantPage: React.FC<AssistantPageProps> = ({ initialQuery, onNavigateTab }) => {
   const { language, t } = useAuth();
+  const loc = ASSISTANT_STRINGS[language] || ASSISTANT_STRINGS.en;
   
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [activeConvId, setActiveConvId] = useState<number | null>(null);
@@ -216,27 +309,31 @@ export const AssistantPage: React.FC<AssistantPageProps> = ({ initialQuery, onNa
                 <Bot className="w-8 h-8 text-krishi-600" />
               </div>
               <h3 className="text-base font-bold text-gray-900 mb-1">
-                {language === 'hi' ? 'कृषिवाणी AI में आपका स्वागत है' : 'Welcome to KrishiVaani Assistant'}
+                {loc.welcome_title}
               </h3>
               <p className="text-xs text-gray-500 max-w-sm mb-6 leading-relaxed">
-                {language === 'hi'
-                  ? 'अपनी फसल की कोई भी समस्या बोलकर या लिखकर पूछें। हम प्रमाणित वैज्ञानिक स्रोतों से उत्तर देंगे।'
-                  : 'Ask about crop cultivation, leaf diseases, pest control, or weather precautions.'}
+                {loc.welcome_desc}
               </p>
 
               {/* Sample Starters */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-w-md w-full text-left">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-w-lg w-full text-left">
                 <button
-                  onClick={() => handleSendMessage(language === 'hi' ? 'धान में भूरे धब्बे का क्या इलाज है?' : 'What is the control measure for blast in paddy?')}
+                  onClick={() => handleSendMessage(loc.starter_1)}
                   className="p-3 text-xs font-semibold rounded-xl border border-gray-200 hover:border-krishi-400 bg-gray-50 hover:bg-krishi-50 transition-colors text-gray-800"
                 >
-                  🌾 {language === 'hi' ? 'धान में भूरे धब्बे का जैविक इलाज?' : 'Bio-control for blast in paddy'}
+                  🌾 {loc.starter_1}
                 </button>
                 <button
-                  onClick={() => handleSendMessage(language === 'hi' ? 'गेहूं में पीला रतुआ कैसे पहचानें?' : 'How to identify yellow rust in wheat?')}
+                  onClick={() => handleSendMessage(loc.starter_2)}
                   className="p-3 text-xs font-semibold rounded-xl border border-gray-200 hover:border-krishi-400 bg-gray-50 hover:bg-krishi-50 transition-colors text-gray-800"
                 >
-                  🌾 {language === 'hi' ? 'गेहूं में पीला रतुआ के लक्षण?' : 'Symptoms of yellow rust in wheat'}
+                  🌾 {loc.starter_2}
+                </button>
+                <button
+                  onClick={() => handleSendMessage(loc.starter_3)}
+                  className="p-3 text-xs font-semibold rounded-xl border border-gray-200 hover:border-krishi-400 bg-gray-50 hover:bg-krishi-50 transition-colors text-gray-800 sm:col-span-2"
+                >
+                  💬 {loc.starter_3}
                 </button>
               </div>
             </div>
@@ -312,7 +409,7 @@ export const AssistantPage: React.FC<AssistantPageProps> = ({ initialQuery, onNa
           {sending && (
             <div className="flex items-center space-x-2 text-xs text-krishi-800 p-3 bg-krishi-50 rounded-2xl w-fit animate-pulse">
               <Bot className="w-4 h-4 animate-spin" />
-              <span>{language === 'hi' ? 'कृषिवाणी उत्तर तैयार कर रही है...' : 'KrishiVaani is analyzing with ICAR records...'}</span>
+              <span>{loc.analyzing}</span>
             </div>
           )}
 
@@ -339,7 +436,7 @@ export const AssistantPage: React.FC<AssistantPageProps> = ({ initialQuery, onNa
             onKeyDown={(e) => {
               if (e.key === 'Enter') handleSendMessage();
             }}
-            placeholder={language === 'hi' ? 'अपनी फसल की समस्या पूछें...' : 'Ask your agricultural question...'}
+            placeholder={loc.placeholder}
             className="flex-1 px-4 py-3 rounded-2xl border border-gray-300 text-sm focus:ring-2 focus:ring-krishi-600 outline-none bg-white"
           />
 
