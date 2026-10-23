@@ -103,25 +103,17 @@ class LLMService:
         payload = {
             'model': self.model,
             'messages': messages,
-            'max_tokens': 2048,
-            'temperature': 0.7
+            'max_tokens': 3500,
+            'temperature': 0.6
         }
 
         try:
-            resp = requests.post(self.base_url, headers=headers, json=payload, timeout=40)
+            resp = requests.post(self.base_url, headers=headers, json=payload, timeout=45)
             if resp.status_code == 200:
                 data = resp.json()
                 choice = data['choices'][0]
                 message_obj = choice.get('message', {})
                 content = (message_obj.get('content') or '').strip()
-
-                # Some reasoning models put the text in reasoning if cut off, but if content exists use it
-                if not content and message_obj.get('reasoning'):
-                    # Fallback extraction if model put answer in reasoning block
-                    reasoning_text = message_obj.get('reasoning', '')
-                    # If there's Bengali/Hindi script in reasoning
-                    if any(ord(char) > 127 for char in reasoning_text):
-                        content = reasoning_text[-500:].strip()
 
                 if content:
                     return {
