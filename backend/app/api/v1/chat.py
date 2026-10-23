@@ -83,12 +83,17 @@ def send_message(conv_id: int):
     # Active crop context if conversation is tied to a crop
     active_crop = db.session.get(CropCycle, conv.crop_id) if conv.crop_id else None
 
+    # Load recent conversation history for multi-turn LLM context
+    past_messages = ChatMessage.query.filter_by(conversation_id=conv.id).order_by(ChatMessage.created_at.desc()).limit(6).all()
+    history = [{'role': m.role, 'content': m.content} for m in reversed(past_messages)]
+
     # Advisory RAG response
     result = advisory_service.answer_query(
         user_query=user_content,
         farmer_profile=user.profile,
         active_crop=active_crop,
-        language=language
+        language=language,
+        conversation_history=history
     )
 
     # Assistant's verified answer

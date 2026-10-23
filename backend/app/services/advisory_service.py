@@ -3,6 +3,7 @@ import re
 import json
 import logging
 from ..models import db, AgriculturalKnowledge, CropIssue, CropCycle, FarmerProfile
+from .llm_service import LLMService
 
 logger = logging.getLogger(__name__)
 
@@ -332,6 +333,9 @@ def detect_language(text: str, default_lang: str = 'en') -> str:
 
 
 class AdvisoryService:
+    def __init__(self, llm_service: LLMService = None):
+        self.llm_service = llm_service or LLMService()
+
     def ensure_knowledge_base_seeded(self):
         """
         Ensures verified ICAR / State Agricultural University reference packages are loaded into the database.
@@ -564,10 +568,10 @@ class AdvisoryService:
             'expert_referral_reason': 'Preliminary identification; confirm with local KVK before chemical treatment.' if confidence == 'preliminary' else None
         }
 
-    def answer_query(self, user_query: str, farmer_profile: FarmerProfile = None, active_crop: CropCycle = None, language: str = None) -> dict:
+    def answer_query(self, user_query: str, farmer_profile: FarmerProfile = None, active_crop: CropCycle = None, language: str = None, conversation_history: list = None) -> dict:
         """
         Answers inquiries in the farmer's native language using intent recognition,
-        conversational intelligence, and source-grounded RAG.
+        conversational intelligence, OpenRouter LLM, and source-grounded RAG.
         """
         self.ensure_knowledge_base_seeded()
         clean_query = (user_query or '').strip()
@@ -578,7 +582,41 @@ class AdvisoryService:
         if active_lang not in GREETING_RESPONSES:
             active_lang = 'en'
 
-        # 2. Check for Greetings / Pleasantries
+        # 2. Search Knowledge Base with vernacular expansion first for grounding
+        crop_hint = active_crop.crop_name if active_crop else None
+        matches = self.search_knowledge(crop_name=crop_hint, query=clean_query)
+
+        sources = []
+        if matches:
+            top_match = matches[0]
+            sources = [{
+                'institution': top_match.source_institution,
+                'source_url': top_match.source_url,
+                'topic': top_match.topic,
+                'year': top_match.publication_year
+            }]
+
+        # 3. Call OpenRouter LLM if configured for dynamic, natural AI conversation
+        if self.llm_service.is_configured():
+            llm_result = self.llm_service.generate_response(
+                user_query=clean_query,
+                language=active_lang,
+                farmer_profile=farmer_profile,
+                active_crop=active_crop,
+                knowledge_matches=matches,
+                conversation_history=conversation_history
+            )
+            if llm_result.get('success') and llm_result.get('content'):
+                return {
+                    'answer': llm_result['content'],
+                    'sources': sources,
+                    'suggested_actions': [
+                        "ফসলের সমস্যা রিপোর্ট করুন" if active_lang == 'bn' else "Report Crop Problem",
+                        "আবহাওয়া পূর্বাভাস" if active_lang == 'bn' else "View Weather Alerts"
+                    ]
+                }
+
+        # 4. Fallback: Check for Greetings / Pleasantries
         for pattern in GREETING_PATTERNS:
             if re.search(pattern, clean_query, re.IGNORECASE):
                 return {
@@ -590,7 +628,7 @@ class AdvisoryService:
                     ]
                 }
 
-        # 3. Check for Diagnostic Guide Requests (e.g., "I don't know what happened to my crop, can you tell me?")
+        # 5. Fallback: Check for Diagnostic Guide Requests
         for pattern in DIAGNOSTIC_GUIDE_PATTERNS:
             if re.search(pattern, clean_query, re.IGNORECASE):
                 return {
@@ -601,10 +639,6 @@ class AdvisoryService:
                         "আবহাওয়া পূর্বাভাস" if active_lang == 'bn' else "Check Weather Alerts"
                     ]
                 }
-
-        # 4. Search Knowledge Base with vernacular expansion
-        crop_hint = active_crop.crop_name if active_crop else None
-        matches = self.search_knowledge(crop_name=crop_hint, query=clean_query)
 
         if not matches:
             fallback_template = UNMATCHED_FALLBACK_TEMPLATES.get(active_lang, UNMATCHED_FALLBACK_TEMPLATES['en'])
