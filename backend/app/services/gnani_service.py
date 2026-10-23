@@ -39,7 +39,55 @@ class GnaniService:
         }
 
     def is_configured(self) -> bool:
-        return bool(self.api_key and not self.api_key.startswith('your_'))
+        return bool(self.api_key and len(self.api_key.strip()) > 5 and not self.api_key.startswith('your_'))
+
+    def _normalize_to_pcm_wav(self, audio_bytes: bytes) -> bytes:
+        """
+        Converts any input audio format (WebM, OGG, MP3, AAC, or arbitrary WAV)
+        into standard 16kHz 16-bit Mono PCM WAV required by Gnani Prisma STT.
+        """
+        import subprocess
+        import tempfile
+
+        if not audio_bytes or len(audio_bytes) < 44:
+            return audio_bytes
+
+        # Detect likely file extension for ffmpeg demuxer hint
+        suffix = '.audio'
+        if audio_bytes[:4] == b'\x1aE\xdf\xa3':
+            suffix = '.webm'
+        elif audio_bytes[:4] == b'RIFF' and audio_bytes[8:12] == b'WAVE':
+            suffix = '.wav'
+        elif audio_bytes[:4] == b'OggS':
+            suffix = '.ogg'
+        elif audio_bytes[:3] == b'ID3' or (len(audio_bytes) > 2 and audio_bytes[0] == 0xFF and (audio_bytes[1] & 0xE0) == 0xE0):
+            suffix = '.mp3'
+
+        with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as in_f:
+            in_f.write(audio_bytes)
+            in_path = in_f.name
+        out_path = in_path + '.clean.wav'
+
+        try:
+            cmd = ['ffmpeg', '-y', '-i', in_path, '-ac', '1', '-ar', '16000', '-c:a', 'pcm_s16le', '-f', 'wav', out_path]
+            res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=10)
+            if res.returncode == 0 and os.path.exists(out_path):
+                with open(out_path, 'rb') as f:
+                    converted = f.read()
+                    if len(converted) > 44:
+                        return converted
+            logger.warning(f"ffmpeg conversion note: {res.stderr.decode(errors='ignore')[:200]}")
+        except Exception as e:
+            logger.warning(f"ffmpeg conversion exception: {str(e)}")
+        finally:
+            if os.path.exists(in_path):
+                try: os.remove(in_path)
+                except Exception: pass
+            if os.path.exists(out_path):
+                try: os.remove(out_path)
+                except Exception: pass
+
+        return audio_bytes
 
     def transcribe(self, audio_bytes: bytes, filename: str = 'audio.wav', language_code: str = 'hi') -> dict:
         """
@@ -52,12 +100,15 @@ class GnaniService:
                 'transcript': ''
             }
 
+        # Normalize audio to 16kHz PCM WAV to prevent ffmpeg conversion error on Gnani server
+        clean_wav = self._normalize_to_pcm_wav(audio_bytes)
+
         gnani_lang = LANGUAGE_CODE_MAP.get(language_code, 'hi-IN')
         url = f'{self.base_url}/stt/v3'
 
         try:
             files = {
-                'audio_file': (filename, io.BytesIO(audio_bytes), 'audio/wav')
+                'audio_file': ('audio.wav', io.BytesIO(clean_wav), 'audio/wav')
             }
             data = {
                 'language_code': gnani_lang,

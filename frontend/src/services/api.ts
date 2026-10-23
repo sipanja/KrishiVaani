@@ -172,7 +172,7 @@ export const api = {
   // Voice (Gnani AI STT & TTS)
   async transcribeVoice(audioBlob: Blob, language = 'hi'): Promise<{ success: boolean; transcript: string }> {
     const formData = new FormData();
-    formData.append('audio', audioBlob, 'audio.wav');
+    formData.append('audio', audioBlob, 'recording.webm');
     formData.append('language', language);
     return request('/voice/transcribe', { method: 'POST', body: formData });
   },
