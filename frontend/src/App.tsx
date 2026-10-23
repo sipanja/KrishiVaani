@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { Navbar } from './components/Navbar';
+import { LanguageSelectionModal } from './components/LanguageSelectionModal';
 import { LandingPage } from './pages/LandingPage';
 import { AuthPage } from './pages/AuthPage';
 import { OnboardingPage } from './pages/OnboardingPage';
@@ -15,7 +16,7 @@ import { AdminPage } from './pages/AdminPage';
 import { Loader2 } from 'lucide-react';
 
 const AppContent: React.FC = () => {
-  const { user, isAuthenticated, isLoading } = useAuth();
+  const { user, isAuthenticated, isLoading, isLanguageModalOpen, closeLanguageModal } = useAuth();
   const [currentTab, setCurrentTab] = useState<string>(() => {
     return localStorage.getItem('krishivaani_token') ? 'dashboard' : 'landing';
   });
@@ -87,6 +88,12 @@ const AppContent: React.FC = () => {
         {view === 'settings' && <SettingsPage />}
         {view === 'admin' && <AdminPage />}
       </main>
+
+      {/* Language Selection Modal */}
+      <LanguageSelectionModal 
+        isOpen={isLanguageModalOpen} 
+        onClose={closeLanguageModal} 
+      />
     </div>
   );
 };

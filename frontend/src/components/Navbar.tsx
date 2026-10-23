@@ -25,7 +25,7 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
-  const { user, profile, language, setLanguage, logout, isAuthenticated, t } = useAuth();
+  const { user, profile, language, openLanguageModal, logout, isAuthenticated, t } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
 
@@ -50,9 +50,18 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
     navItems.push({ id: 'admin', label: t.nav_admin, icon: ShieldCheck });
   }
 
-  const toggleLanguage = () => {
-    setLanguage(language === 'hi' ? 'en' : 'hi');
-  };
+  // Active language display name
+  const currentLangLabel = {
+    hi: 'हिंदी',
+    en: 'English',
+    bn: 'বাংলা',
+    te: 'తెలుగు',
+    mr: 'मराठी',
+    ta: 'தமிழ்',
+    gu: 'ગુજરાતી',
+    pa: 'ਪੰਜਾਬੀ',
+    kn: 'ಕನ್ನಡ'
+  }[language] || 'भाषा';
 
   return (
     <header className="sticky top-0 z-40 bg-krishi-900 text-white shadow-md border-b border-krishi-800">
@@ -105,14 +114,14 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
           {/* Right Action Controls */}
           <div className="flex items-center space-x-2 sm:space-x-3">
             
-            {/* Language Switcher */}
+            {/* Language Switcher Modal Trigger */}
             <button
-              onClick={toggleLanguage}
-              className="flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-krishi-800/80 hover:bg-krishi-700 border border-krishi-700 text-krishi-100 transition-colors"
-              title="Toggle Language / भाषा बदलें"
+              onClick={openLanguageModal}
+              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-krishi-800 hover:bg-krishi-700 border border-krishi-600/70 text-krishi-100 shadow-sm transition-all"
+              title="Change Language / भाषा बदलें"
             >
-              <Globe className="w-3.5 h-3.5 text-harvest-light" />
-              <span>{language === 'hi' ? 'English' : 'हिंदी'}</span>
+              <Globe className="w-4 h-4 text-harvest-light" />
+              <span>{currentLangLabel}</span>
             </button>
 
             {isAuthenticated ? (

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
+import { SUPPORTED_LANGUAGES } from '../utils/translations';
 import { 
   Settings, 
   User, 
@@ -161,25 +162,27 @@ export const SettingsPage: React.FC = () => {
             <Globe className="w-4 h-4 text-krishi-700" />
             <span>{t.preferred_lang}</span>
           </h2>
-          <div className="flex gap-3">
-            <button
-              type="button"
-              onClick={() => setLanguage('hi')}
-              className={`px-4 py-2.5 rounded-xl text-xs font-bold border transition-all ${
-                language === 'hi' ? 'bg-krishi-800 text-white border-krishi-800' : 'bg-gray-50 border-gray-300 text-gray-700'
-              }`}
-            >
-              🇮🇳 हिंदी (Hindi)
-            </button>
-            <button
-              type="button"
-              onClick={() => setLanguage('en')}
-              className={`px-4 py-2.5 rounded-xl text-xs font-bold border transition-all ${
-                language === 'en' ? 'bg-krishi-800 text-white border-krishi-800' : 'bg-gray-50 border-gray-300 text-gray-700'
-              }`}
-            >
-              English
-            </button>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+            {SUPPORTED_LANGUAGES.map((langOpt) => {
+              const isSelected = language === langOpt.code;
+              return (
+                <button
+                  key={langOpt.code}
+                  type="button"
+                  onClick={() => setLanguage(langOpt.code)}
+                  className={`p-3 rounded-xl text-left border transition-all ${
+                    isSelected
+                      ? 'bg-krishi-800 text-white border-krishi-800 shadow-sm'
+                      : 'bg-gray-50 border-gray-200 hover:border-krishi-300 text-gray-800'
+                  }`}
+                >
+                  <p className="text-sm font-bold">{langOpt.nativeName}</p>
+                  <p className={`text-[10px] ${isSelected ? 'text-krishi-200' : 'text-gray-500'}`}>
+                    {langOpt.englishName}
+                  </p>
+                </button>
+              );
+            })}
           </div>
         </div>
 

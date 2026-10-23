@@ -13,7 +13,7 @@ export interface FarmerProfile {
   id: number;
   user_id: number;
   full_name: string;
-  preferred_language: 'hi' | 'en' | 'bn' | 'te' | 'ta' | 'mr';
+  preferred_language: 'hi' | 'en' | 'bn' | 'te' | 'ta' | 'mr' | 'gu' | 'pa' | 'kn';
   phone_number: string | null;
   village: string | null;
   district: string | null;
