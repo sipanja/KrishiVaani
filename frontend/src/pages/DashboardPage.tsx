@@ -19,8 +19,10 @@ import {
   RefreshCw,
   Droplets,
   Wind,
-  Thermometer
+  Thermometer,
+  MapPin
 } from 'lucide-react';
+import { getAutomaticCoordinates } from '../utils/location';
 
 interface DashboardPageProps {
   onNavigate: (tab: string, extra?: any) => void;
@@ -37,16 +39,21 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
   
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [detectingLocation, setDetectingLocation] = useState(false);
   const [voiceModalOpen, setVoiceModalOpen] = useState(false);
 
-  const loadDashboardData = async () => {
+  const loadDashboardData = async (forceLocationRefresh = false) => {
     try {
+      if (forceLocationRefresh) setDetectingLocation(true);
+      // Automatically detect farmer's location via GPS
+      const coords = await getAutomaticCoordinates(forceLocationRefresh).catch(() => null);
+
       const [farmsRes, cropsRes, issuesRes, followUpsRes, weatherRes] = await Promise.all([
         api.getFarms(),
         api.getCrops(),
         api.getIssues(),
         api.getFollowUps('pending'),
-        api.getWeather().catch(() => null)
+        api.getWeather(undefined, coords?.lat, coords?.lon).catch(() => null)
       ]);
 
       setFarms(farmsRes.farms);
@@ -59,6 +66,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
     } finally {
       setLoading(false);
       setRefreshing(false);
+      setDetectingLocation(false);
     }
   };
 
@@ -68,7 +76,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
 
   const handleRefresh = () => {
     setRefreshing(true);
-    loadDashboardData();
+    loadDashboardData(true);
   };
 
   const handleVoiceTranscript = (transcript: string) => {
@@ -379,8 +387,27 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
 
             {weatherData?.weather?.current ? (
               <div>
-                <p className="text-xs text-blue-200 truncate">{weatherData.location_label}</p>
-                <div className="flex items-baseline space-x-2 mt-2">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center space-x-1.5 text-xs text-blue-200 truncate pr-2">
+                    <MapPin className="w-3.5 h-3.5 text-sky-400 shrink-0" />
+                    <span className="font-semibold truncate text-white">{weatherData.location_label}</span>
+                    {weatherData.is_auto_detected && (
+                      <span className="px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-sky-500/30 text-sky-200 border border-sky-400/30 shrink-0">
+                        Auto GPS
+                      </span>
+                    )}
+                  </div>
+                  <button
+                    onClick={() => loadDashboardData(true)}
+                    title="Refresh GPS Location / मौसम अपडेट करें"
+                    disabled={detectingLocation}
+                    className="p-1 rounded-lg text-blue-300 hover:text-white hover:bg-blue-800/60 transition-colors shrink-0"
+                  >
+                    <RefreshCw className={`w-3.5 h-3.5 ${detectingLocation ? 'animate-spin' : ''}`} />
+                  </button>
+                </div>
+
+                <div className="flex items-baseline space-x-2 mt-1">
                   <span className="text-4xl font-extrabold">
                     {weatherData.weather.current.temperature}°C
                   </span>

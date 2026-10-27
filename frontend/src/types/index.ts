@@ -151,6 +151,9 @@ export interface WeatherAlert {
 export interface WeatherData {
   location_label: string;
   farm_id: number | null;
+  latitude?: number;
+  longitude?: number;
+  is_auto_detected?: boolean;
   weather: {
     success: boolean;
     latitude: number;

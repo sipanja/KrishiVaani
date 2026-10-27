@@ -47,3 +47,33 @@ def test_voice_health_endpoint(client):
     data = res.get_json()
     assert 'status' in data
     assert 'configured' in data
+
+def test_weather_auto_location_endpoint(client):
+    # Register a test farmer in West Bengal
+    reg_res = client.post('/api/v1/auth/register', json={
+        'username': 'subrata_bengal',
+        'password': 'Password999!',
+        'full_name': 'Subrata Ghosh',
+        'preferred_language': 'bn',
+        'village': 'kanchrol',
+        'state': 'West Bengal'
+    })
+    token = reg_res.get_json()['token']
+    headers = {'Authorization': f'Bearer {token}'}
+
+    # 1. Weather without coordinates: should auto-detect from user's state (West Bengal)
+    w_res1 = client.get('/api/v1/weather', headers=headers)
+    assert w_res1.status_code == 200
+    data1 = w_res1.get_json()
+    assert data1['is_auto_detected'] is True
+    assert 'West Bengal' in data1['location_label']
+    assert abs(data1['latitude'] - 22.9868) < 0.01
+
+    # 2. Weather with explicit GPS lat/lon params: should use exact coordinates
+    w_res2 = client.get('/api/v1/weather?lat=23.2324&lon=87.8615', headers=headers)
+    assert w_res2.status_code == 200
+    data2 = w_res2.get_json()
+    assert data2['is_auto_detected'] is True
+    assert abs(data2['latitude'] - 23.2324) < 0.001
+    assert abs(data2['longitude'] - 87.8615) < 0.001
+

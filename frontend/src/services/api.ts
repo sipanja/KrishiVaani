@@ -189,8 +189,14 @@ export const api = {
   },
 
   // Weather & IMD alerts
-  async getWeather(farmId?: number): Promise<WeatherData> {
-    const qs = farmId ? `?farm_id=${farmId}` : '';
+  async getWeather(farmId?: number, lat?: number, lon?: number): Promise<WeatherData> {
+    const params = new URLSearchParams();
+    if (farmId) params.append('farm_id', String(farmId));
+    if (lat !== undefined && lon !== undefined) {
+      params.append('lat', String(lat));
+      params.append('lon', String(lon));
+    }
+    const qs = params.toString() ? `?${params.toString()}` : '';
     return request(`/weather${qs}`);
   },
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 import { 
@@ -51,7 +51,6 @@ export const OnboardingPage: React.FC<OnboardingPageProps> = ({ onComplete }) =>
   // Geolocation handler
   const handleCaptureLocation = () => {
     if (!navigator.geolocation) {
-      alert('Geolocation is not supported by your browser.');
       return;
     }
     setGeoLocating(true);
@@ -62,12 +61,19 @@ export const OnboardingPage: React.FC<OnboardingPageProps> = ({ onComplete }) =>
         setGeoLocating(false);
       },
       (err) => {
-        console.warn('Geolocation warning:', err);
+        console.warn('Geolocation auto-detect error:', err);
         setGeoLocating(false);
       },
       { enableHighAccuracy: true, timeout: 10000 }
     );
   };
+
+  // Automatically trigger location detection on reaching step 2
+  useEffect(() => {
+    if (step === 2 && latitude === null && !geoLocating) {
+      handleCaptureLocation();
+    }
+  }, [step]);
 
   const handleStep1Submit = async (e: React.FormEvent) => {
     e.preventDefault();
