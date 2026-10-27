@@ -44,6 +44,7 @@ export const FarmsPage: React.FC = () => {
   // Crop Form
   const [cropFarmId, setCropFarmId] = useState<number>(0);
   const [cropName, setCropName] = useState('Paddy (Rice)');
+  const [customCropName, setCustomCropName] = useState('');
   const [variety, setVariety] = useState('');
   const [sowingDate, setSowingDate] = useState(() => new Date().toISOString().split('T')[0]);
   const [growthStage, setGrowthStage] = useState('Vegetative / Tillering');
@@ -112,17 +113,23 @@ export const FarmsPage: React.FC = () => {
 
   const handleCreateCrop = async (e: React.FormEvent) => {
     e.preventDefault();
+    const finalCropName = cropName === 'Other' ? customCropName.trim() : cropName;
+    if (!finalCropName) {
+      alert(t.enter_other_crop || 'Please enter the crop name');
+      return;
+    }
     setSubmitting(true);
     try {
       await api.createCrop({
         farm_id: cropFarmId,
-        crop_name: cropName,
+        crop_name: finalCropName,
         variety: variety || undefined,
         sowing_date: sowingDate || undefined,
         growth_stage: growthStage,
       });
       setCropModalOpen(false);
       setVariety('');
+      setCustomCropName('');
       loadData();
     } catch (err: any) {
       alert(err.message || 'Failed to create crop');
@@ -527,7 +534,12 @@ export const FarmsPage: React.FC = () => {
                 <label className="block text-xs font-semibold text-gray-700 mb-1">{t.crop_name} *</label>
                 <select
                   value={cropName}
-                  onChange={(e) => setCropName(e.target.value)}
+                  onChange={(e) => {
+                    setCropName(e.target.value);
+                    if (e.target.value !== 'Other') {
+                      setCustomCropName('');
+                    }
+                  }}
                   className="w-full px-3 py-2 rounded-xl border border-gray-300 text-sm bg-white font-medium"
                 >
                   <option value="Paddy (Rice)">Paddy / Rice (धान)</option>
@@ -540,8 +552,26 @@ export const FarmsPage: React.FC = () => {
                   <option value="Maize">Maize (मक्का)</option>
                   <option value="Soybean">Soybean (सोयाबीन)</option>
                   <option value="Chickpea / Gram">Chickpea (चना)</option>
+                  <option value="Other">➕ {t.crop_other || 'Other Crop (अन्य फसल)'}</option>
                 </select>
               </div>
+
+              {cropName === 'Other' && (
+                <div className="animate-fade-in">
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">
+                    {t.enter_other_crop || 'Enter Other Crop Name'} *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    autoFocus
+                    value={customCropName}
+                    onChange={(e) => setCustomCropName(e.target.value)}
+                    placeholder={t.other_crop_placeholder || 'e.g. Jute, Barley, Mango'}
+                    className="w-full px-3 py-2 rounded-xl border border-krishi-400 bg-krishi-50/30 text-sm focus:ring-2 focus:ring-krishi-600 outline-none font-medium"
+                  />
+                </div>
+              )}
 
               <div>
                 <label className="block text-xs font-semibold text-gray-700 mb-1">{t.crop_variety}</label>
