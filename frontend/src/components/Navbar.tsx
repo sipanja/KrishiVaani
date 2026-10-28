@@ -39,16 +39,16 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
   }, [isAuthenticated, currentTab]);
 
   const navItems = [
-    { id: 'dashboard', label: t.nav_dashboard, shortLabel: t.nav_dashboard, icon: LayoutDashboard },
-    { id: 'farms', label: t.nav_farms, shortLabel: language === 'en' ? 'Farms' : t.nav_farms, icon: Trees },
-    { id: 'assistant', label: t.nav_assistant, shortLabel: language === 'en' ? 'Ask AI' : t.nav_assistant, icon: Bot },
-    { id: 'crop-health', label: t.nav_crop_health, shortLabel: language === 'en' ? 'Health' : t.nav_crop_health, icon: Stethoscope },
-    { id: 'weather', label: t.nav_weather, shortLabel: language === 'en' ? 'Weather' : t.nav_weather, icon: CloudSun },
-    { id: 'follow-ups', label: t.nav_followups, shortLabel: language === 'en' ? 'Follow-Ups' : t.nav_followups, icon: ClockAlert },
+    { id: 'dashboard', label: language === 'en' ? 'Dashboard' : t.nav_dashboard, icon: LayoutDashboard },
+    { id: 'farms', label: language === 'en' ? 'Farms' : t.nav_farms, icon: Trees },
+    { id: 'assistant', label: language === 'en' ? 'Ask AI' : t.nav_assistant, icon: Bot },
+    { id: 'crop-health', label: language === 'en' ? 'Crop Health' : t.nav_crop_health, icon: Stethoscope },
+    { id: 'weather', label: language === 'en' ? 'Weather' : t.nav_weather, icon: CloudSun },
+    { id: 'follow-ups', label: language === 'en' ? 'Follow-Ups' : t.nav_followups, icon: ClockAlert },
   ];
 
   if (user?.role === 'admin') {
-    navItems.push({ id: 'admin', label: t.nav_admin, shortLabel: 'Admin', icon: ShieldCheck });
+    navItems.push({ id: 'admin', label: t.nav_admin, icon: ShieldCheck });
   }
 
   // Active language display name
@@ -87,8 +87,8 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
 
   return (
     <header className="sticky top-0 z-40 bg-krishi-900/95 backdrop-blur-md text-white shadow-md border-b border-krishi-800 w-full">
-      <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
-        <div className="flex items-center justify-between min-h-[4rem] py-2 gap-1.5 sm:gap-2">
+      <div className="w-full px-3 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between min-h-[4rem] py-2 gap-2 sm:gap-4">
           
           {/* Logo & Brand */}
           <div 
@@ -115,7 +115,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
 
           {/* Desktop Navigation Links */}
           {isAuthenticated && (
-            <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1.5 shrink min-w-0">
+            <nav className="hidden lg:flex items-center gap-1 xl:gap-1.5 shrink-0">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const active = currentTab === item.id;
@@ -123,15 +123,14 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
                   <button
                     key={item.id}
                     onClick={() => onNavigate(item.id)}
-                    className={`flex items-center space-x-1 sm:space-x-1.5 px-2 xl:px-2.5 2xl:px-3 py-1.5 rounded-xl text-xs xl:text-sm font-medium transition-all whitespace-nowrap shrink-0 ${
+                    className={`flex items-center space-x-1 sm:space-x-1.5 px-2.5 xl:px-3 py-1.5 rounded-xl text-xs xl:text-sm font-medium transition-all whitespace-nowrap shrink-0 ${
                       active
                         ? 'bg-krishi-800 text-white font-semibold shadow-sm ring-1 ring-krishi-600/60'
                         : 'text-krishi-100 hover:bg-krishi-800/60 hover:text-white'
                     }`}
                   >
                     <Icon className={`w-3.5 h-3.5 xl:w-4 xl:h-4 shrink-0 ${active ? 'text-harvest-light' : 'text-krishi-300'}`} />
-                    <span className="hidden 2xl:inline">{item.label}</span>
-                    <span className="2xl:hidden inline">{item.shortLabel || item.label}</span>
+                    <span className="whitespace-nowrap">{item.label}</span>
                   </button>
                 );
               })}
