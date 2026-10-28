@@ -271,3 +271,4 @@ For in-depth guides and references, consult the `docs/` directory:
 
 ## 📄 License
 This project is licensed under the [MIT License](LICENSE).
+# KrishiVaani
