@@ -41,10 +41,12 @@ dist-ssr/
 .env.production
 *.env
 
-# SQLite
+# SQLite & App Data
 *.db
 *.sqlite
 *.sqlite3
+instance/
+*.log
 
 # Uploads & Media
 backend/uploads/
