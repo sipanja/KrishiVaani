@@ -48,7 +48,7 @@ const AppContent: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#fcfaf7] flex flex-col">
+    <div className="min-h-screen bg-[#fcfaf7] flex flex-col w-full overflow-x-hidden">
       {/* Top Navigation */}
       <Navbar currentTab={view} onNavigate={handleNavigate} />
 

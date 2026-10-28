@@ -39,16 +39,16 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
   }, [isAuthenticated, currentTab]);
 
   const navItems = [
-    { id: 'dashboard', label: t.nav_dashboard, icon: LayoutDashboard },
-    { id: 'farms', label: t.nav_farms, icon: Trees },
-    { id: 'assistant', label: t.nav_assistant, icon: Bot },
-    { id: 'crop-health', label: t.nav_crop_health, icon: Stethoscope },
-    { id: 'weather', label: t.nav_weather, icon: CloudSun },
-    { id: 'follow-ups', label: t.nav_followups, icon: ClockAlert },
+    { id: 'dashboard', label: t.nav_dashboard, shortLabel: t.nav_dashboard, icon: LayoutDashboard },
+    { id: 'farms', label: t.nav_farms, shortLabel: language === 'en' ? 'Farms' : t.nav_farms, icon: Trees },
+    { id: 'assistant', label: t.nav_assistant, shortLabel: language === 'en' ? 'Ask AI' : t.nav_assistant, icon: Bot },
+    { id: 'crop-health', label: t.nav_crop_health, shortLabel: language === 'en' ? 'Health' : t.nav_crop_health, icon: Stethoscope },
+    { id: 'weather', label: t.nav_weather, shortLabel: language === 'en' ? 'Weather' : t.nav_weather, icon: CloudSun },
+    { id: 'follow-ups', label: t.nav_followups, shortLabel: language === 'en' ? 'Follow-Ups' : t.nav_followups, icon: ClockAlert },
   ];
 
   if (user?.role === 'admin') {
-    navItems.push({ id: 'admin', label: t.nav_admin, icon: ShieldCheck });
+    navItems.push({ id: 'admin', label: t.nav_admin, shortLabel: 'Admin', icon: ShieldCheck });
   }
 
   // Active language display name
@@ -86,28 +86,28 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
   const userInitial = (profile?.full_name || user?.username || 'F').trim().charAt(0).toUpperCase();
 
   return (
-    <header className="sticky top-0 z-40 bg-krishi-900/95 backdrop-blur-md text-white shadow-md border-b border-krishi-800">
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between min-h-[4.25rem] py-2 gap-2">
+    <header className="sticky top-0 z-40 bg-krishi-900/95 backdrop-blur-md text-white shadow-md border-b border-krishi-800 w-full">
+      <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
+        <div className="flex items-center justify-between min-h-[4rem] py-2 gap-1.5 sm:gap-2">
           
           {/* Logo & Brand */}
           <div 
-            className="flex items-center space-x-2.5 sm:space-x-3 cursor-pointer group shrink-0"
+            className="flex items-center space-x-2 sm:space-x-2.5 cursor-pointer group shrink-0"
             onClick={() => onNavigate(isAuthenticated ? 'dashboard' : 'landing')}
           >
-            <div className="w-10 h-10 rounded-xl bg-krishi-700/80 border border-krishi-500/30 flex items-center justify-center text-krishi-300 shadow-inner group-hover:bg-krishi-600 transition-colors shrink-0">
-              <Sprout className="w-6 h-6 text-krishi-300" />
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-krishi-700/80 border border-krishi-500/30 flex items-center justify-center text-krishi-300 shadow-inner group-hover:bg-krishi-600 transition-colors shrink-0">
+              <Sprout className="w-5 h-5 sm:w-6 sm:h-6 text-krishi-300" />
             </div>
             <div className="flex flex-col justify-center">
               <div className="flex items-center space-x-1.5 leading-tight">
-                <span className="text-base sm:text-lg lg:text-xl font-extrabold tracking-tight text-white whitespace-nowrap">
+                <span className="text-base sm:text-lg font-extrabold tracking-tight text-white whitespace-nowrap">
                   {t.app_title}
                 </span>
                 <span className="px-1.5 py-0.5 text-[10px] font-bold bg-harvest text-white rounded tracking-wide shadow-sm shrink-0">
                   AI
                 </span>
               </div>
-              <p className="text-[11px] text-krishi-200 hidden sm:block leading-tight mt-0.5 whitespace-nowrap">
+              <p className="text-[10px] sm:text-[11px] text-krishi-200 hidden 2xl:block leading-tight mt-0.5 whitespace-nowrap">
                 {language === 'hi' ? 'स्मार्ट भारतीय कृषि सहायक' : 'Smart Agriculture Voice Platform'}
               </p>
             </div>
@@ -115,7 +115,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
 
           {/* Desktop Navigation Links */}
           {isAuthenticated && (
-            <nav className="hidden lg:flex items-center gap-1 xl:gap-1.5">
+            <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1.5 shrink min-w-0">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const active = currentTab === item.id;
@@ -123,14 +123,15 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
                   <button
                     key={item.id}
                     onClick={() => onNavigate(item.id)}
-                    className={`flex items-center space-x-1.5 px-2.5 xl:px-3 py-1.5 rounded-xl text-xs xl:text-sm font-medium transition-all whitespace-nowrap shrink-0 ${
+                    className={`flex items-center space-x-1 sm:space-x-1.5 px-2 xl:px-2.5 2xl:px-3 py-1.5 rounded-xl text-xs xl:text-sm font-medium transition-all whitespace-nowrap shrink-0 ${
                       active
                         ? 'bg-krishi-800 text-white font-semibold shadow-sm ring-1 ring-krishi-600/60'
                         : 'text-krishi-100 hover:bg-krishi-800/60 hover:text-white'
                     }`}
                   >
-                    <Icon className={`w-4 h-4 shrink-0 ${active ? 'text-harvest-light' : 'text-krishi-300'}`} />
-                    <span>{item.label}</span>
+                    <Icon className={`w-3.5 h-3.5 xl:w-4 xl:h-4 shrink-0 ${active ? 'text-harvest-light' : 'text-krishi-300'}`} />
+                    <span className="hidden 2xl:inline">{item.label}</span>
+                    <span className="2xl:hidden inline">{item.shortLabel || item.label}</span>
                   </button>
                 );
               })}
@@ -138,12 +139,12 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
           )}
 
           {/* Right Action Controls */}
-          <div className="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
+          <div className="flex items-center space-x-1 sm:space-x-1.5 xl:space-x-2 shrink-0">
             
             {/* Language Switcher Modal Trigger */}
             <button
               onClick={openLanguageModal}
-              className="flex items-center space-x-1.5 px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-krishi-800 hover:bg-krishi-700 border border-krishi-700/80 text-krishi-100 shadow-sm transition-all shrink-0"
+              className="flex items-center space-x-1 sm:space-x-1.5 px-2 sm:px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-krishi-800 hover:bg-krishi-700 border border-krishi-700/80 text-krishi-100 shadow-sm transition-all shrink-0"
               title="Change Language / भाषा बदलें"
             >
               <Globe className="w-3.5 h-3.5 text-harvest-light shrink-0" />
@@ -155,7 +156,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
                 {/* Notifications Bell */}
                 <button
                   onClick={() => onNavigate('follow-ups')}
-                  className="relative p-2 rounded-xl text-krishi-200 hover:text-white hover:bg-krishi-800 transition-colors shrink-0"
+                  className="relative p-1.5 sm:p-2 rounded-xl text-krishi-200 hover:text-white hover:bg-krishi-800 transition-colors shrink-0"
                   title={t.notifications}
                 >
                   <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -169,7 +170,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
                 {/* Settings */}
                 <button
                   onClick={() => onNavigate('settings')}
-                  className={`p-2 rounded-xl transition-colors shrink-0 ${
+                  className={`p-1.5 sm:p-2 rounded-xl transition-colors shrink-0 ${
                     currentTab === 'settings' ? 'bg-krishi-800 text-white' : 'text-krishi-200 hover:text-white hover:bg-krishi-800'
                   }`}
                   title={t.nav_settings}
@@ -178,15 +179,15 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
                 </button>
 
                 {/* Farmer Pill & Logout */}
-                <div className="hidden sm:flex items-center pl-2 border-l border-krishi-800 space-x-2 shrink-0">
-                  <div className="w-8 h-8 rounded-full bg-krishi-800 border border-krishi-600/40 flex items-center justify-center text-krishi-200 font-bold text-xs uppercase shadow-inner shrink-0">
+                <div className="hidden sm:flex items-center pl-1.5 sm:pl-2 border-l border-krishi-800 space-x-1.5 sm:space-x-2 shrink-0">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-krishi-800 border border-krishi-600/40 flex items-center justify-center text-krishi-200 font-bold text-xs uppercase shadow-inner shrink-0" title={profile?.full_name || user?.username}>
                     {userInitial}
                   </div>
-                  <div className="text-left leading-tight max-w-[110px] xl:max-w-[140px]">
+                  <div className="text-left leading-tight hidden xl:block max-w-[85px] md:max-w-[100px] xl:max-w-[130px]">
                     <p className="text-xs font-semibold text-white truncate">
                       {profile?.full_name || user?.username}
                     </p>
-                    <p className="text-[10px] text-krishi-300 truncate flex items-center space-x-0.5 mt-0.5">
+                    <p className="text-[10px] text-krishi-300 truncate hidden 2xl:flex items-center space-x-0.5 mt-0.5">
                       <MapPin className="w-2.5 h-2.5 text-krishi-400 shrink-0 inline mr-0.5" />
                       <span className="truncate">
                         {profile?.village ? `${profile.village}${profile.state ? ', ' + profile.state : ''}` : (user?.role || 'Farmer')}
@@ -195,7 +196,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
                   </div>
                   <button
                     onClick={logout}
-                    className="p-1.5 rounded-lg text-krishi-300 hover:text-red-300 hover:bg-red-950/40 transition-colors shrink-0 ml-1"
+                    className="p-1.5 rounded-lg text-krishi-300 hover:text-red-300 hover:bg-red-950/40 transition-colors shrink-0"
                     title={t.sign_out}
                   >
                     <LogOut className="w-4 h-4" />
@@ -205,7 +206,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
                 {/* Mobile hamburger button */}
                 <button
                   onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                  className="lg:hidden p-2 rounded-xl text-krishi-200 hover:text-white hover:bg-krishi-800 shrink-0"
+                  className="lg:hidden p-1.5 sm:p-2 rounded-xl text-krishi-200 hover:text-white hover:bg-krishi-800 shrink-0"
                   aria-label="Toggle navigation menu"
                 >
                   {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
