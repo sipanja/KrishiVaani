@@ -52,7 +52,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
   }
 
   // Active language display name
-  const currentLangLabel = {
+  const currentLangLabel: Record<string, string> = {
     hi: 'हिंदी',
     en: 'English',
     bn: 'বাংলা',
@@ -61,8 +61,27 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
     ta: 'தமிழ்',
     gu: 'ગુજરાતી',
     pa: 'ਪੰਜਾਬੀ',
-    kn: 'ಕನ್ನಡ'
-  }[language] || 'भाषा';
+    kn: 'ಕನ್ನಡ',
+    ml: 'മലയാളം',
+    or: 'ଓଡ଼ିଆ',
+    as: 'অসমীয়া',
+    ur: 'اردو',
+    bho: 'भोजपुरी',
+    mai: 'मैथिली',
+    sa: 'संस्कृतम्',
+    kok: 'कोंकणी',
+    ne: 'नेपाली',
+    sd: 'سنڌي',
+    ks: 'كٲشُر',
+    doi: 'डोगरी',
+    mni: 'মৈতৈলোন্',
+    brx: 'बड़ो',
+    sat: 'ᱥᱟᱱᱛᱟᱲᱤ',
+    mwr: 'मारवाड़ी',
+    hne: 'छत्तीसगढ़ी',
+    bgc: 'हरियाणवी',
+  };
+  const activeLangName = currentLangLabel[language] || 'भाषा';
 
   const userInitial = (profile?.full_name || user?.username || 'F').trim().charAt(0).toUpperCase();
 
@@ -128,7 +147,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
               title="Change Language / भाषा बदलें"
             >
               <Globe className="w-3.5 h-3.5 text-harvest-light shrink-0" />
-              <span className="whitespace-nowrap">{currentLangLabel}</span>
+              <span className="whitespace-nowrap">{activeLangName}</span>
             </button>
 
             {isAuthenticated ? (

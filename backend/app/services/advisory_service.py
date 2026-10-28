@@ -423,9 +423,7 @@ class AdvisoryService:
         
         # Determine language
         profile_lang = farmer_profile.preferred_language if farmer_profile else 'hi'
-        active_lang = language or detect_language(symptoms, profile_lang)
-        if active_lang not in GREETING_RESPONSES:
-            active_lang = 'hi' if active_lang == 'hi' else 'en'
+        active_lang = language or detect_language(symptoms, profile_lang) or 'hi'
 
         matches = self.search_knowledge(crop_name=crop_name, query=symptoms)
 
@@ -578,9 +576,7 @@ class AdvisoryService:
         
         # 1. Determine active language
         profile_lang = farmer_profile.preferred_language if farmer_profile else None
-        active_lang = language or detect_language(clean_query, profile_lang or 'hi')
-        if active_lang not in GREETING_RESPONSES:
-            active_lang = 'en'
+        active_lang = language or detect_language(clean_query, profile_lang or 'hi') or 'hi'
 
         # 2. Search Knowledge Base with vernacular expansion first for grounding
         crop_hint = active_crop.crop_name if active_crop else None

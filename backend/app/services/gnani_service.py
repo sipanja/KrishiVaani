@@ -7,7 +7,7 @@ from flask import current_app
 
 logger = logging.getLogger(__name__)
 
-# Standard BCP-47 language codes supported by Gnani AI
+# Standard BCP-47 language codes supported by Gnani AI & Indian Regional Locales
 LANGUAGE_CODE_MAP = {
     'hi': 'hi-IN',
     'en': 'en-IN',
@@ -17,7 +17,25 @@ LANGUAGE_CODE_MAP = {
     'mr': 'mr-IN',
     'gu': 'gu-IN',
     'kn': 'kn-IN',
-    'pa': 'pa-IN'
+    'pa': 'pa-IN',
+    'ml': 'ml-IN',
+    'or': 'or-IN',
+    'as': 'as-IN',
+    'ur': 'ur-IN',
+    'bho': 'hi-IN',
+    'mai': 'hi-IN',
+    'sa': 'sa-IN',
+    'kok': 'kok-IN',
+    'ne': 'ne-IN',
+    'sd': 'sd-IN',
+    'ks': 'ks-IN',
+    'doi': 'doi-IN',
+    'mni': 'mni-IN',
+    'brx': 'brx-IN',
+    'sat': 'sat-IN',
+    'mwr': 'hi-IN',
+    'hne': 'hi-IN',
+    'bgc': 'hi-IN'
 }
 
 VOICE_MAP = {
