@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User, FarmerProfile } from '../types';
 import { api } from '../services/api';
+import { supabase } from '../lib/supabase';
 import { Language, translations, SUPPORTED_LANGUAGES } from '../utils/translations';
 
 interface AuthContextType {
@@ -76,6 +77,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const logout = async () => {
     try {
       await api.logout();
+      if (supabase) {
+        await supabase.auth.signOut();
+      }
     } catch {
       // Ignore network errors on logout
     } finally {
