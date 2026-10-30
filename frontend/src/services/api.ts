@@ -1,3 +1,4 @@
+import { supabase } from '../lib/supabase';
 import { 
   User, 
   FarmerProfile, 
@@ -24,8 +25,9 @@ export class ApiError extends Error {
   }
 }
 
-function getAuthHeaders(isFormData = false): Record<string, string> {
-  const token = localStorage.getItem('krishivaani_token');
+async function getAuthHeaders(isFormData = false): Promise<Record<string, string>> {
+  const { data } = supabase ? await supabase.auth.getSession() : { data: { session: null } };
+  const token = data.session?.access_token || localStorage.getItem('krishivaani_token');
   const headers: Record<string, string> = {};
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
@@ -40,7 +42,7 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
   const url = `${API_BASE}${endpoint}`;
   const isFormData = options.body instanceof FormData;
   const headers = {
-    ...getAuthHeaders(isFormData),
+    ...(await getAuthHeaders(isFormData)),
     ...(options.headers as Record<string, string> || {})
   };
 
