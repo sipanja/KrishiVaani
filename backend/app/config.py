@@ -10,10 +10,18 @@ class Config:
     JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', SECRET_KEY)
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=7)
     
-    # Database
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'sqlite:///krishivaani.db')
+    # Database (Supabase PostgreSQL or local SQLite)
+    _db_url = os.getenv('DATABASE_URL', 'sqlite:///krishivaani.db')
+    if _db_url and _db_url.startswith('postgres://'):
+        _db_url = _db_url.replace('postgres://', 'postgresql://', 1)
+    SQLALCHEMY_DATABASE_URI = _db_url
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
+    # Supabase Credentials
+    SUPABASE_URL = os.getenv('SUPABASE_URL', 'https://plbqzqfuslulbqqfquvg.supabase.co')
+    SUPABASE_ANON_KEY = os.getenv('SUPABASE_ANON_KEY', os.getenv('SUPABASE_KEY', ''))
+    SUPABASE_SERVICE_ROLE_KEY = os.getenv('SUPABASE_SERVICE_ROLE_KEY', '')
+
     # Gnani AI API
     GNANI_API_KEY = os.getenv('GNANI_API_KEY', '')
     GNANI_BASE_URL = os.getenv('GNANI_BASE_URL', 'https://api.vachana.ai')
@@ -23,8 +31,11 @@ class Config:
     MAX_CONTENT_LENGTH = int(os.getenv('MAX_CONTENT_LENGTH', 5 * 1024 * 1024)) # 5MB limit
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp', 'wav', 'mp3', 'm4a', 'ogg'}
     
-    # Follow-up Engine
-    ENABLE_BACKGROUND_SCHEDULER = os.getenv('ENABLE_BACKGROUND_SCHEDULER', 'true').lower() == 'true'
+    # Follow-up Engine (disabled in serverless environments like Vercel)
+    ENABLE_BACKGROUND_SCHEDULER = (
+        os.getenv('ENABLE_BACKGROUND_SCHEDULER', 'true').lower() == 'true' 
+        and not os.getenv('VERCEL')
+    )
     QUIET_HOURS_START = int(os.getenv('QUIET_HOURS_START', 21)) # 9 PM
     QUIET_HOURS_END = int(os.getenv('QUIET_HOURS_END', 6))       # 6 AM
     

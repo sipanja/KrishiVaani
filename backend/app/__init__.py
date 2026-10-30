@@ -89,9 +89,11 @@ def create_app(config_class=None):
         except Exception as e:
             logger.warning(f"Could not start background scheduler: {str(e)}")
 
-    # Auto-create tables in local development SQLite if not present
+    # Auto-create tables if not present (SQLite local or Supabase PostgreSQL)
     with app.app_context():
-        if 'sqlite' in app.config.get('SQLALCHEMY_DATABASE_URI', ''):
+        try:
             db.create_all()
+        except Exception as e:
+            logger.warning(f"Database schema auto-creation notice: {str(e)}")
 
     return app
